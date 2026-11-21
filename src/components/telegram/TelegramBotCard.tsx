@@ -7,12 +7,14 @@ interface TelegramBotCardProps {
   className?: string;
 }
 
+const TELEGRAM_BOT_USERNAME = "threatxofficialbot";
+
 export function TelegramBotCard({ className = '' }: TelegramBotCardProps) {
   const [copied, setCopied] = useState(false);
   const [showFeatures, setShowFeatures] = useState(false);
 
   const copyUsername = () => {
-    navigator.clipboard.writeText('@threatxofficial');
+    navigator.clipboard.writeText(`@${TELEGRAM_BOT_USERNAME}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -47,7 +49,7 @@ export function TelegramBotCard({ className = '' }: TelegramBotCardProps) {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white">THREATX Bot</h2>
-              <p className="text-sm text-white/60">@threatxofficial</p>
+              <p className="text-sm text-white/60">@{TELEGRAM_BOT_USERNAME}</p>
             </div>
           </div>
           <button
@@ -64,7 +66,7 @@ export function TelegramBotCard({ className = '' }: TelegramBotCardProps) {
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 012-2h10a2 2 0 012 2v1M8 5a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v1z" />
                 </svg>
-                Copy @threatxofficial
+                Copy @{TELEGRAM_BOT_USERNAME}
               </>
             )}
           </button>
@@ -76,7 +78,7 @@ export function TelegramBotCard({ className = '' }: TelegramBotCardProps) {
 
         <div className="flex flex-wrap gap-3 mb-8">
           <a
-            href="https://t.me/threatxofficial"
+            href={`https://t.me/${TELEGRAM_BOT_USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25"
@@ -142,7 +144,7 @@ export function TelegramBotCard({ className = '' }: TelegramBotCardProps) {
             Built with the same engine as <a href="/" className="text-indigo-400 hover:text-indigo-300 underline">THREATX Web</a>
           </p>
           <a
-            href="https://t.me/threatxofficial"
+            href={`https://t.me/${TELEGRAM_BOT_USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25"

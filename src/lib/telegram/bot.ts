@@ -5,7 +5,7 @@ const vercelUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 export const BOT_TOKEN = process.env.BOT_TOKEN || "";
-export const BOT_USERNAME = (process.env.BOT_USERNAME || "threatxofficial").replace(/^@/, "");
+export const BOT_USERNAME = (process.env.BOT_USERNAME || "threatxofficialbot").replace(/^@/, "");
 export const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || vercelUrl).replace(/\/+$/, "");
 export const WEBHOOK_URL = (process.env.WEBHOOK_URL || APP_URL).replace(/\/+$/, "");
 
