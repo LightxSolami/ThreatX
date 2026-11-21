@@ -78,7 +78,8 @@ export function formatRiskLevel(level: string): { emoji: string; label: string }
   }
 }
 
-export function formatScore(score: number): string {
+export function formatScore(score: number | null): string {
+  if (score === null) return "⚪ Not scored";
   if (score >= 80) return `🔴 ${score}/100`;
   if (score >= 60) return `🟠 ${score}/100`;
   if (score >= 40) return `🟡 ${score}/100`;

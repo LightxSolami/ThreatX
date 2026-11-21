@@ -22,7 +22,7 @@ const API_BASE = `${APP_URL}/api`;
 interface ScanResponse {
   address: string;
   network: string;
-  score: number;
+  score: number | null;
   riskLevel: string;
   summary: {
     totalFindings: number;

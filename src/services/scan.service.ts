@@ -299,10 +299,8 @@ export async function runScan(address: string, rpcUrl?: string): Promise<ScanRes
 
   const partialScan = checks.some((check) => check.status === "UNKNOWN");
   const criticalUnavailable = checks.some((check) => check.critical && check.status === "UNKNOWN");
-  const score = calculateScore(findings);
-  const riskLevel = criticalUnavailable
-    ? "INCOMPLETE SCAN"
-    : scoreToRiskLevel(score);
+  const score = criticalUnavailable ? null : calculateScore(findings);
+  const riskLevel = score === null ? "INCOMPLETE SCAN" : scoreToRiskLevel(score);
   const failedChecks = Array.from(new Set([
     ...allFailedChecks,
     ...checks
