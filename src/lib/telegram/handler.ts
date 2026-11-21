@@ -65,7 +65,14 @@ export class TelegramBot {
         disable_web_page_preview: true,
       }),
     });
-    return res.json();
+    const result = await res.json();
+    if (!res.ok || (result && typeof result === 'object' && result.ok === false)) {
+      const description = result && typeof result === 'object' && typeof result.description === 'string'
+        ? result.description
+        : `HTTP ${res.status}`;
+      throw new Error(`Telegram sendMessage failed: ${description}`);
+    }
+    return result;
   }
 
   async editMessageText(chatId: number | string, messageId: number, text: string, keyboard?: InlineKeyboardMarkup, parseMode: ParseMode = 'Markdown'): Promise<any> {
@@ -138,7 +145,7 @@ export class TelegramBot {
     if (!userId) return;
 
     if (text.startsWith('/start')) {
-      await this.sendMessage(chatId, getMessage('welcome', firstName), createMainMenuKeyboard());
+      await this.sendMessage(chatId, getMessage('welcome', escapeMarkdown(firstName)), createMainMenuKeyboard());
       return;
     }
 
@@ -237,7 +244,7 @@ export class TelegramBot {
       return;
     }
 
-    await this.sendMessage(chatId, getMessage('welcome', firstName), createMainMenuKeyboard());
+    await this.sendMessage(chatId, getMessage('welcome', escapeMarkdown(firstName)), createMainMenuKeyboard());
   }
 
   private async handleCallbackQuery(callbackQuery: CallbackQuery): Promise<void> {
