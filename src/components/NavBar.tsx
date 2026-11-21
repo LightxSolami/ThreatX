@@ -38,12 +38,6 @@ export function NavBar() {
               priority
               className="h-8 w-auto object-contain sm:h-9"
             />
-            <span className="hidden border-l border-white/10 pl-3 xl:flex xl:flex-col">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-solana-blue">
-                AI-powered Solana security
-              </span>
-              <span className="mt-0.5 text-[10px] text-white/40">Public-chain intelligence</span>
-            </span>
           </Link>
 
           <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex" aria-label="Main navigation">
