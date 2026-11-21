@@ -46,7 +46,7 @@ const currentSignature = "current-signature";
 const previousSignature = "previous-signature";
 
 function request(authorization?: string): NextRequest {
-  return new NextRequest("https://solcurity.test/api/telegram/alerts/dispatch", {
+  return new NextRequest("https://threatx.test/api/telegram/alerts/dispatch", {
     method: "POST",
     headers: authorization ? { authorization } : {},
   });

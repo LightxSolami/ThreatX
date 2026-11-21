@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About Solcurity | Free Solana Wallet Security Scanner",
-  description: "Learn about Solcurity - a free, open-source Solana wallet security scanner",
+  title: "About THREATX | Free Solana Wallet Security Scanner",
+  description: "Learn about THREATX - a free, open-source Solana wallet security scanner",
 };
 
 export default function AboutPage() {
@@ -11,19 +11,19 @@ export default function AboutPage() {
     <div className="min-h-screen bg-solana-dark">
       <header className="border-b border-white/10 bg-solana-navy/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-white tracking-tight">Solcurity</h1>
+          <h1 className="text-xl font-bold text-white tracking-tight">THREATX</h1>
           <Link href="/scanner" className="text-white/60 hover:text-white text-sm">New Scan</Link>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-16">
         <article className="prose prose-invert max-w-none">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8">About Solcurity</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8">About THREATX</h1>
 
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-white mb-4">Mission</h2>
             <p className="text-white/80 mb-4">
-              Solcurity is a free, open-source Solana wallet security scanner. Our mission is to make
+              THREATX is a free, open-source Solana wallet security scanner. Our mission is to make
               automated security analysis accessible to everyone in the Solana ecosystem — no fees,
               no account required, no private keys ever requested.
             </p>
@@ -89,7 +89,7 @@ export default function AboutPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-white mb-4">Open Source</h2>
             <p className="text-white/80 mb-4">
-              Solcurity is open source. The code is available on GitHub:
+              THREATX is open source. The code is available on GitHub:
             </p>
             <div className="flex flex-wrap gap-4">
               <a href="https://github.com/solcurity/solcurity" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-solana-purple/20 border border-solana-purple/30 text-solana-blue rounded-xl hover:bg-solana-purple/30 transition-colors text-sm font-medium">

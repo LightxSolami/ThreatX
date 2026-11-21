@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AINewsDashboard } from "@/components/AINewsDashboard";
 
 export const metadata: Metadata = {
-  title: "AI Debate | Solcurity",
+  title: "AI Debate | THREATX",
   description: "A scheduled, multi-perspective debate on Solana ecosystem news.",
 };
 

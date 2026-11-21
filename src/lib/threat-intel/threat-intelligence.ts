@@ -20,7 +20,7 @@ export interface ThreatIntelSource {
 
 export const THREAT_INTEL_SOURCES: ThreatIntelSource[] = [
   {
-    name: "Solcurity Threat Intelligence Database",
+    name: "THREATX Threat Intelligence Database",
     url: "https://github.com/LightxSolami/Solcurity/tree/main/supabase/migrations",
     description: "Server-side database for cited, reviewed records; no records or sources are seeded.",
   },

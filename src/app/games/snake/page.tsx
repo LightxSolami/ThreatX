@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Snake Arena | Solcurity",
+  title: "Snake Arena | THREATX",
   description: "Play SolSnake practice or free online multiplayer.",
 };
 

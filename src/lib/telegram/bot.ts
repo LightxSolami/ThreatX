@@ -5,7 +5,7 @@ const vercelUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 export const BOT_TOKEN = process.env.BOT_TOKEN || "";
-export const BOT_USERNAME = (process.env.BOT_USERNAME || "SolcurityBot").replace(/^@/, "");
+export const BOT_USERNAME = (process.env.BOT_USERNAME || "threatxofficial").replace(/^@/, "");
 export const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || vercelUrl).replace(/\/+$/, "");
 export const WEBHOOK_URL = (process.env.WEBHOOK_URL || APP_URL).replace(/\/+$/, "");
 
@@ -28,7 +28,7 @@ export interface Update {
 }
 
 export const COMMANDS = [
-  { command: "start", description: "Open the Solcurity menu" },
+  { command: "start", description: "Open the THREATX menu" },
   { command: "scan", description: "Scan a public wallet address" },
   { command: "wallet", description: "Get a wallet summary" },
   { command: "token", description: "Inspect a token mint" },
@@ -100,7 +100,7 @@ export function formatNumber(num: number): string {
 
 export const MESSAGES = {
   welcome: (name: string) => `
-🛡️ *Welcome to Solcurity, ${name}!*
+🛡️ *Welcome to THREATX, ${name}!*
 
 Your personal Solana wallet security assistant. I can help you:
 
@@ -116,7 +116,7 @@ Tap a button below to get started:
 `,
 
   help: `
-📖 *Solcurity Bot Commands*
+📖 *THREATX Bot Commands*
 
 /start — Show main menu
 /scan \`<address>\` — Full security scan
@@ -127,7 +127,7 @@ Tap a button below to get started:
 /alerts — List your alerts
 /settings — Bot settings
 /help — This message
-/about — About Solcurity
+/about — About THREATX
 
 *Inline Buttons:* Most actions work via buttons below messages.
 
@@ -388,7 +388,7 @@ Tap a button to change settings.
 `,
 
   about: `
-ℹ️ *About Solcurity*
+ℹ️ *About THREATX*
 
 🛡️ *Free Solana Wallet Security Scanner*
 

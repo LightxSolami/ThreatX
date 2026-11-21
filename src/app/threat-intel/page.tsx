@@ -5,7 +5,7 @@ import { ModerationConsole } from "@/components/threat-intel/ModerationConsole";
 import { getThreatIntelDashboardData } from "@/lib/threat-intel/supabase-repository";
 
 export const metadata: Metadata = {
-  title: "Threat Intelligence | Solcurity",
+  title: "Threat Intelligence | THREATX",
   description: "Cited, moderated Solana threat-intelligence records and database status.",
 };
 

@@ -27,7 +27,7 @@ export function ClaudeMcpSetup() {
       <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Remote MCP endpoint</p>
       <div className="mt-2 flex flex-col gap-3 sm:flex-row">
         <code className="min-w-0 flex-1 break-all rounded-lg bg-white/5 px-3 py-2 text-sm text-solana-blue">
-          {endpoint || "https://your-solcurity-domain/api/mcp"}
+          {endpoint || "https://your-threatx-domain/api/mcp"}
         </code>
         <button
           type="button"

@@ -30,8 +30,8 @@ const cronSecret = "test-ai-news-vercel-cron-secret";
 
 function request(authorization?: string, action: string | null = "test"): NextRequest {
   const url = action
-    ? `https://solcurity.test/api/ai-news/discuss?action=${action}`
-    : "https://solcurity.test/api/ai-news/discuss";
+    ? `https://threatx.test/api/ai-news/discuss?action=${action}`
+    : "https://threatx.test/api/ai-news/discuss";
   return new NextRequest(url, {
     headers: authorization ? { authorization } : {},
   });

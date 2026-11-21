@@ -2,7 +2,7 @@
 
 jest.mock("@/lib/telegram/bot", () => ({
   BOT_TOKEN: "test-bot-token",
-  WEBHOOK_URL: "https://solcurity.test",
+  WEBHOOK_URL: "https://threatx.test",
 }));
 
 jest.mock("@/lib/telegram/handler", () => ({
@@ -47,7 +47,7 @@ describe("Telegram webhook route", () => {
   });
 
   it("rejects webhook requests without Telegram's secret header", async () => {
-    const response = await POST(request("POST", "https://solcurity.test/api/telegram/webhook", {}, JSON.stringify({ update_id: 1 })));
+    const response = await POST(request("POST", "https://threatx.test/api/telegram/webhook", {}, JSON.stringify({ update_id: 1 })));
 
     expect(response.status).toBe(401);
     expect(processUpdate).not.toHaveBeenCalled();
@@ -56,7 +56,7 @@ describe("Telegram webhook route", () => {
   it("accepts update ID zero after validating the Telegram secret", async () => {
     const response = await POST(request(
       "POST",
-      "https://solcurity.test/api/telegram/webhook",
+      "https://threatx.test/api/telegram/webhook",
       { "x-telegram-bot-api-secret-token": "test-webhook-secret" },
       JSON.stringify({ update_id: 0 }),
     ));
@@ -66,7 +66,7 @@ describe("Telegram webhook route", () => {
   });
 
   it("rejects webhook administration without a bearer token", async () => {
-    const response = await GET(request("GET", "https://solcurity.test/api/telegram/webhook?action=info"));
+    const response = await GET(request("GET", "https://threatx.test/api/telegram/webhook?action=info"));
 
     expect(response.status).toBe(401);
   });
@@ -79,7 +79,7 @@ describe("Telegram webhook route", () => {
 
     const response = await GET(request(
       "GET",
-      "https://solcurity.test/api/telegram/webhook?action=set",
+      "https://threatx.test/api/telegram/webhook?action=set",
       { authorization: "Bearer test-admin-token" },
     ));
 

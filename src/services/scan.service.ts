@@ -331,7 +331,7 @@ export async function runScan(address: string, rpcUrl?: string): Promise<ScanRes
         lastUpdated: null,
       },
       {
-        name: "Solcurity curated threat dataset",
+        name: "THREATX curated threat dataset",
         url: "https://github.com/LightxSolami/Solcurity/blob/main/src/lib/threat-intel/threat-intelligence.ts",
         lastUpdated: null,
       },

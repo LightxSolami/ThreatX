@@ -1,7 +1,7 @@
 {
-  "name": "Solcurity",
-  "short_name": "Solcurity",
-  "description": "Solana wallet security scanner and Snake Arena.",
+  "name": "THREATX",
+  "short_name": "THREATX",
+  "description": "AI-powered Solana security: Don't trust. Verify.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,13 +9,13 @@
   "theme_color": "#0a0a1a",
   "icons": [
     {
-      "src": "/icons/solcurity-192.png",
+      "src": "/icons/threatx-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/solcurity-512.png",
+      "src": "/icons/threatx-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

@@ -31,7 +31,7 @@ const validRequest = {
 };
 
 function request(body: unknown, ip: string) {
-  return new NextRequest("https://solcurity.test/api/scan/explain", {
+  return new NextRequest("https://threatx.test/api/scan/explain", {
     method: "POST",
     headers: {
       "content-type": "application/json",

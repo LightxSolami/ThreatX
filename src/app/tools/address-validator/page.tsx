@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AddressValidator } from "@/components/tools/AddressValidator";
 
 export const metadata: Metadata = {
-  title: "Address Validator | Solcurity Tools",
+  title: "Address Validator | THREATX Tools",
   description: "Validate and decode Solana public keys",
 };
 

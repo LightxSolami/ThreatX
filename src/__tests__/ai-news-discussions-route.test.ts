@@ -12,7 +12,7 @@ import { GET } from "@/app/api/ai-news/discussions/route";
 const repository = jest.requireMock("@/lib/ai-news/discussion-repository");
 
 function request(query: string): NextRequest {
-  return new NextRequest(`https://solcurity.test/api/ai-news/discussions${query}`);
+  return new NextRequest(`https://threatx.test/api/ai-news/discussions${query}`);
 }
 
 describe("GET /api/ai-news/discussions", () => {

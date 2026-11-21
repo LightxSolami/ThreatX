@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Solana Snake Game | Solcurity Tools",
+  title: "Solana Snake Game | THREATX Tools",
   description: "Play Snake built on Solana with Rust/Anchor - a fun demonstration of Solana blockchain gaming",
 };
 

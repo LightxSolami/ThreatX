@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Solana Tools | Solcurity",
+  title: "Solana Tools | THREATX",
   description: "Useful Solana utilities - address validator, lamports converter, token account finder, and more",
 };
 

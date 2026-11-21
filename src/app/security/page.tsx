@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Security & Threat Intelligence | Solcurity",
-  description: "Learn about Solcurity's security methodology and threat intelligence sources",
+  title: "Security & Threat Intelligence | THREATX",
+  description: "Learn about THREATX's security methodology and threat intelligence sources",
 };
 
 export default function SecurityPage() {
@@ -11,7 +11,7 @@ export default function SecurityPage() {
     <div className="min-h-screen bg-solana-dark">
       <header className="border-b border-white/10 bg-solana-navy/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-white tracking-tight">Solcurity</h1>
+          <h1 className="text-xl font-bold text-white tracking-tight">THREATX</h1>
           <Link href="/scanner" className="text-white/60 hover:text-white text-sm">New Scan</Link>
         </div>
       </header>

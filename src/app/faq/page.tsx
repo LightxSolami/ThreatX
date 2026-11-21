@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "FAQ | Solcurity",
-  description: "Frequently asked questions about Solcurity - Solana wallet security scanner, SVM Explorer, and local validator setup.",
+  title: "FAQ | THREATX",
+  description: "Frequently asked questions about THREATX - Solana wallet security scanner, SVM Explorer, and local validator setup.",
 };
 
 export default function FAQPage() {
@@ -12,16 +12,16 @@ export default function FAQPage() {
       category: "Getting Started",
       questions: [
         {
-          q: "What is Solcurity?",
-          a: "Solcurity is a read-only Solana wallet scanner. It reads public account, token, and recent transaction data and reports check statuses and evidence-backed findings. Risk score and scan confidence are separate; the score is withheld when a check is unavailable."
+          q: "What is THREATX?",
+          a: "THREATX is a read-only Solana wallet scanner. It reads public account, token, and recent transaction data and reports check statuses and evidence-backed findings. Risk score and scan confidence are separate; the score is withheld when a check is unavailable."
         },
         {
-          q: "Is Solcurity free?",
-          a: "Solcurity is open source and can use public Solana Mainnet RPC endpoints. Operators can configure multiple server-side endpoints with SOLANARPCURLS (or the legacy SOLANARPCURL). The scanner does not accept arbitrary client-supplied RPC URLs."
+          q: "Is THREATX free?",
+          a: "THREATX is open source and can use public Solana Mainnet RPC endpoints. Operators can configure multiple server-side endpoints with SOLANARPCURLS (or the legacy SOLANARPCURL). The scanner does not accept arbitrary client-supplied RPC URLs."
         },
         {
           q: "Do I need to connect my wallet?",
-          a: "No. Solcurity only requires a public Solana address (44-character base58 string). We never ask for private keys, seed phrases, or wallet connections for scanning. Connecting a wallet in Snake Arena is optional and only reads your public address; the free practice game does not stake SOL."
+          a: "No. THREATX only requires a public Solana address (44-character base58 string). We never ask for private keys, seed phrases, or wallet connections for scanning. Connecting a wallet in Snake Arena is optional and only reads your public address; the free practice game does not stake SOL."
         },
         {
           q: "What wallets are supported?",
@@ -75,7 +75,7 @@ export default function FAQPage() {
         },
         {
           q: "Why does my wallet show 'active mint/freeze authority'?",
-          a: "The RPC reports that the token mint or freeze authority is still set. That authority can change supply or freeze token accounts. Solcurity reports this as a risk indicator, not proof of malicious activity."
+          a: "The RPC reports that the token mint or freeze authority is still set. That authority can change supply or freeze token accounts. THREATX reports this as a risk indicator, not proof of malicious activity."
         },
         {
           q: "Can I scan multiple wallets at once?",
@@ -105,10 +105,10 @@ export default function FAQPage() {
       questions: [
         {
           q: "Is my data private?",
-          a: "Yes. Solcurity only analyzes publicly available on-chain data. We never collect private keys, seed phrases, IP addresses (beyond standard rate limiting), or personal information. No analytics, tracking cookies, or user fingerprinting. All code is open source."
+          a: "Yes. THREATX only analyzes publicly available on-chain data. We never collect private keys, seed phrases, IP addresses (beyond standard rate limiting), or personal information. No analytics, tracking cookies, or user fingerprinting. All code is open source."
         },
         {
-          q: "Can I self-host Solcurity?",
+          q: "Can I self-host THREATX?",
           a: "Yes. Clone the repository, install dependencies, and run the Next.js app. Configure SOLANARPCURLS with server-side Mainnet endpoints for scanner failover, and GROQ_API_KEY only if using AI summaries. Never expose provider credentials through NEXT_PUBLIC variables."
         }
       ]
@@ -120,7 +120,7 @@ export default function FAQPage() {
       <header className="mb-12 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Frequently Asked Questions</h1>
         <p className="text-lg text-white/60 max-w-2xl mx-auto">
-          Everything you need to know about using Solcurity, setting up a local validator, and understanding scan results.
+          Everything you need to know about using THREATX, setting up a local validator, and understanding scan results.
         </p>
       </header>
 

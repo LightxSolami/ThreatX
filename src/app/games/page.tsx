@@ -2,15 +2,15 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Games | Solcurity",
-  description: "Play free Solana-themed games in the Solcurity game menu.",
+  title: "Games | THREATX",
+  description: "Play free Solana-themed games in the THREATX game menu.",
 };
 
 export default function GamesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <header className="mb-10">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-solana-green">Solcurity Arcade</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-solana-green">THREATX Arcade</p>
         <h1 className="mt-3 text-4xl font-bold text-white">Games</h1>
         <p className="mt-3 max-w-2xl text-white/60">
           Take a break with free-to-play games. No wallet connection or SOL deposit is required.

@@ -14,7 +14,7 @@ const scanRateLimiter = new RateLimiter(6, 60_000);
 function createServer(clientIp: string) {
   const server = new McpServer(
     {
-      name: "solcurity",
+      name: "threatx",
       version: "1.0.0",
     },
     {

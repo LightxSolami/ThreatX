@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LamportsConverter } from "@/components/tools/LamportsConverter";
 
 export const metadata: Metadata = {
-  title: "Lamports Converter | Solcurity Tools",
+  title: "Lamports Converter | THREATX Tools",
   description: "Convert between SOL and lamports",
 };
 

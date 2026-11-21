@@ -29,18 +29,18 @@ export function NavBar() {
     <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-solana-navy/95 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4">
         <div className="flex h-[4.25rem] items-center justify-between gap-3">
-          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Solcurity home">
+          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="THREATX home">
             <Image
-              src="/solcurity-logo.png"
-              alt="Solcurity"
-              width={256}
-              height={79}
+              src="/threatx-logo.png"
+              alt="THREATX"
+              width={2048}
+              height={576}
               priority
               className="h-8 w-auto object-contain sm:h-9"
             />
             <span className="hidden border-l border-white/10 pl-3 xl:flex xl:flex-col">
               <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-solana-blue">
-                Solana security
+                AI-powered Solana security
               </span>
               <span className="mt-0.5 text-[10px] text-white/40">Public-chain intelligence</span>
             </span>

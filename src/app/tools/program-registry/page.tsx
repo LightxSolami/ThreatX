@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Program ID Registry | Solcurity Tools",
+  title: "Program ID Registry | THREATX Tools",
   description: "Browse known Solana program IDs and addresses",
 };
 

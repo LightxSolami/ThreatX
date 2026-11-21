@@ -7,7 +7,7 @@ import { TelegramBotCard } from "@/components/telegram/TelegramBotCard";
 import { getPumpFunTokenLink } from "@/lib/pumpfun-token-link";
 
 export const metadata: Metadata = {
-  title: "Solcurity | Solana Security Intelligence",
+  title: "THREATX | AI-Powered Solana Security",
   description:
     "Scan public Solana wallets, review security findings, and follow token creator and market activity.",
 };
@@ -113,7 +113,7 @@ export default function HomePage() {
                   Solana wallet intelligence, inside Claude
                 </span>
                 <span className="mt-1 block max-w-2xl text-sm text-white/50">
-                  Ask Claude to scan public Mainnet data through Solcurity’s remote MCP tool—no wallet connection or API key needed.
+                  Ask Claude to scan public Mainnet data through THREATX’s remote MCP tool—no wallet connection or API key needed.
                 </span>
               </span>
             </div>
@@ -157,7 +157,7 @@ export default function HomePage() {
         </div>
       </section>
 
-<section className="px-4 pb-8 sm:px-6" aria-label="Solcurity token launch">
+<section className="px-4 pb-8 sm:px-6" aria-label="THREATX token launch">
         <div className="mx-auto max-w-7xl">
           <div className="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-solana-blue/20 bg-[radial-gradient(ellipse_at_88%_50%,rgba(98,201,155,0.075),transparent_40%),linear-gradient(120deg,rgba(12,19,17,0.96),rgba(12,16,18,0.98))] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div className="flex items-center gap-4">
@@ -169,10 +169,10 @@ export default function HomePage() {
               </span>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-solana-blue">
-                  Solcurity · Official launch details
+                  THREATX · Official launch details
                 </p>
                 <h2 className="mt-1 text-lg font-semibold text-white">
-                  The token CA will be shared here
+                  $THRX - The token CA will be shared here
                 </h2>
                 <p className="mt-1 max-w-2xl text-sm text-white/50">
                   We&apos;ll post the official mint address and direct Pump.fun link here when it launches.
@@ -270,7 +270,7 @@ export default function HomePage() {
             href="/claude"
             className="rounded-xl border border-solana-purple/30 bg-solana-purple/10 px-4 py-3 text-sm text-white/80 transition hover:bg-solana-purple/20 hover:text-white"
           >
-            Use Solcurity with Claude
+            Use THREATX with Claude
           </Link>
           <Link
             href="/scanner"

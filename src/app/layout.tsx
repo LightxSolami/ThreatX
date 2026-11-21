@@ -31,7 +31,7 @@ const footerGroups = [
   {
     title: "About",
     links: [
-      { href: "/about", label: "About Solcurity" },
+      { href: "/about", label: "About THREATX" },
       { href: "/privacy", label: "Privacy" },
     ],
   },
@@ -39,33 +39,33 @@ const footerGroups = [
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://solcurity.app"),
-  title: "Solcurity | Solana Security Intelligence",
+  title: "THREATX | AI-Powered Solana Security",
   description:
-    "Read-only Solana wallet security and on-chain activity intelligence, grounded in public transaction data.",
+    "AI-powered Solana security. Don't trust. Verify.",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/favicon.ico?v=2",
+    apple: "/apple-touch-icon.png?v=2",
   },
   manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
-    siteName: "Solcurity",
-    title: "Solcurity",
-    description: "Live Solana wallet activity monitoring and security tools.",
+    siteName: "THREATX",
+    title: "THREATX",
+    description: "AI-powered Solana security. Don't trust. Verify.",
     images: [
       {
-        url: "/icons/solcurity-social.png",
+        url: "/icons/threatx-social.png",
         width: 1200,
         height: 630,
-        alt: "Solcurity logo",
+        alt: "THREATX logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Solcurity",
-    description: "Live Solana wallet activity monitoring and security tools.",
-    images: ["/icons/solcurity-social.png"],
+    title: "THREATX",
+    description: "AI-powered Solana security. Don't trust. Verify.",
+    images: ["/icons/threatx-social.png"],
   },
   keywords: [
     "solana",
@@ -95,21 +95,21 @@ export default function RootLayout({
           <div className="site-footer__content mx-auto max-w-7xl">
             <div className="grid gap-10 border-b border-white/[0.08] pb-9 sm:grid-cols-[1.4fr_2fr] lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
               <div className="max-w-sm">
-                <Link href="/" className="inline-flex items-center" aria-label="Solcurity home">
+                <Link href="/" className="inline-flex items-center" aria-label="THREATX home">
                   <Image
-                    src="/solcurity-logo.png"
-                    alt="Solcurity"
-                    width={256}
-                    height={79}
+                    src="/threatx-logo.png"
+                    alt="THREATX"
+                    width={2048}
+                    height={576}
                     className="h-8 w-auto object-contain"
                   />
                 </Link>
                 <p className="mt-3 max-w-xs text-sm leading-6 text-white/45">
-                  Solana wallet security and activity intelligence. Read-only by design.
+                  THREATX AI-powered Solana security. Don&apos;t trust. Verify.
                 </p>
                 <div className="mt-6 flex items-center gap-4">
                   <a
-                    href="https://x.com/SolcurityTools"
+                    href="https://x.com/THREATXofficial"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Follow us on X"
@@ -124,7 +124,7 @@ export default function RootLayout({
                     />
                   </a>
                   <a
-                    href="https://t.me/solurityofficial"
+                    href="https://t.me/threatxofficial"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Join our Telegram"
@@ -165,7 +165,7 @@ export default function RootLayout({
               <p>Public-chain data only · No wallet connection required to monitor</p>
               <div className="flex items-center gap-4">
                 <a
-                  href="https://x.com/SolcurityTools"
+                  href="https://x.com/THREATXofficial"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/40 hover:text-white transition-colors"
@@ -174,7 +174,7 @@ export default function RootLayout({
                   <img src="/icons/x.png" alt="X" width={16} height={16} className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://t.me/solurityofficial"
+                  href="https://t.me/threatxofficial"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/40 hover:text-white transition-colors"

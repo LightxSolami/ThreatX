@@ -193,7 +193,7 @@ const mobileBrowser=()=>/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(
 const showConnectedWallet=(p,key=p.publicKey.toString())=>{prov=p;$('wal').textContent=key.slice(0,4)+'…'+key.slice(-4)+' · Disconnect';$('wn').textContent='Connected. Balances and paid rooms are not available in this build.'};
 const existingProvider=gp();if(existingProvider&&existingProvider.publicKey)showConnectedWallet(existingProvider);
 $('wal').onclick=async()=>{try{if(prov&&prov.publicKey){await prov.disconnect();prov=null;$('wal').textContent='Connect wallet';$('wn').textContent='Disconnected.';return}
- const p=gp();if(!p){if(mobileBrowser()){$('wn').textContent='Opening Solcurity in Phantom…';location.href=phantomBrowseUrl()}else{$('wn').textContent='No Solana wallet detected. You can still play without connecting one.'}return}
+ const p=gp();if(!p){if(mobileBrowser()){$('wn').textContent='Opening THREATX in Phantom…';location.href=phantomBrowseUrl()}else{$('wn').textContent='No Solana wallet detected. You can still play without connecting one.'}return}
  const r=await p.connect();const key=(r&&r.publicKey?r.publicKey:p.publicKey).toString();showConnectedWallet(p,key)}catch(e){$('wn').textContent='Connection was declined or failed.'}};
 })();
 </script></body></html>

@@ -59,7 +59,7 @@ function categorizeItem(title: string, summary: string, feedCategory: string): N
 async function fetchRSSFeed(feed: { name: string; url: string; category: string }): Promise<NewsItem[]> {
   try {
     const response = await fetch(feed.url, {
-      headers: { "User-Agent": "Solcurity-AI-News/1.0" },
+      headers: { "User-Agent": "THREATX-AI-News/1.0" },
       next: { revalidate: 300 },
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);

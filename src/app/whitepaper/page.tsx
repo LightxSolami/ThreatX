@@ -2,15 +2,15 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Whitepaper | Solcurity",
-  description: "Solcurity - Automated Solana Wallet Security Assessment. Technical whitepaper and architecture overview.",
+  title: "Whitepaper | THREATX",
+  description: "THREATX - Automated Solana Wallet Security Assessment. Technical whitepaper and architecture overview.",
 };
 
 export default function WhitepaperPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
       <header className="mb-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Solcurity Whitepaper</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">THREATX Whitepaper</h1>
         <p className="text-lg text-white/60 max-w-2xl mx-auto">
           Automated Solana Wallet Security Assessment Platform — Technical Architecture & Methodology
         </p>
@@ -46,12 +46,12 @@ export default function WhitepaperPage() {
         <h2 className="text-2xl font-bold text-white mb-4">1. Abstract</h2>
         <div className="prose prose-invert max-w-none">
           <p className="text-white/70 leading-relaxed">
-            Solcurity is an open-source, read-only tool for inspecting public Solana account, token, and recent transaction data.
+            THREATX is an open-source, read-only tool for inspecting public Solana account, token, and recent transaction data.
             It reports the status and evidence of the checks it can perform. The platform consists of a wallet scanner,
             an SVM (Solana Virtual Machine) explorer, and a suite of developer tools.
           </p>
           <p className="text-white/70 leading-relaxed mt-4">
-            Solcurity is not a substitute for a security audit and does not analyze program source code or detect
+            THREATX is not a substitute for a security audit and does not analyze program source code or detect
             smart-contract vulnerabilities. Authority state may be reported as a risk indicator, but it does not prove
             malicious activity. A numeric risk score is returned only when all applicable checks are available; scan
             confidence is reported separately.
@@ -84,7 +84,7 @@ export default function WhitepaperPage() {
         <h2 className="text-2xl font-bold text-white mb-4">3. Solution Overview</h2>
         <div className="prose prose-invert max-w-none">
           <p className="text-white/70 leading-relaxed">
-            Solcurity addresses these problems through automated, transparent, and user-friendly security analysis:
+            THREATX addresses these problems through automated, transparent, and user-friendly security analysis:
           </p>
           <div className="grid md:grid-cols-3 gap-6 mt-8">
             <div className="bg-solana-card border border-white/10 rounded-2xl p-6">
@@ -329,7 +329,7 @@ export default function WhitepaperPage() {
       </section>
 
       <footer className="mt-16 pt-8 border-t border-white/10 text-center text-white/50">
-        <p className="mb-2">Solcurity is open source under MIT License</p>
+        <p className="mb-2">THREATX is open source under MIT License</p>
         <p className="text-sm">
           <Link href="https://github.com/LightxSolami/Solcurity" target="_blank" rel="noopener noreferrer" className="text-solana-blue hover:underline">
             View on GitHub

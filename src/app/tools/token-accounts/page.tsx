@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TokenAccountFinder } from "@/components/tools/TokenAccountFinder";
 
 export const metadata: Metadata = {
-  title: "Token Account Finder | Solcurity Tools",
+  title: "Token Account Finder | THREATX Tools",
   description: "Find all token accounts for a Solana wallet",
 };
 

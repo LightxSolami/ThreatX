@@ -3,13 +3,13 @@ import Link from "next/link";
 import { ClaudeMcpSetup } from "@/components/ClaudeMcpSetup";
 
 export const metadata: Metadata = {
-  title: "Use Solcurity with Claude | Solcurity",
-  description: "Connect Claude to Solcurity's read-only Solana Mainnet wallet scanner using MCP.",
+  title: "Use THREATX with Claude | THREATX",
+  description: "Connect Claude to THREATX's read-only Solana Mainnet wallet scanner using MCP.",
 };
 
 const steps = [
   "In Claude, open Settings → Connectors and choose Add custom connector.",
-  "Paste the Solcurity endpoint below. If prompted for authentication, choose No sign in.",
+  "Paste the THREATX endpoint below. If prompted for authentication, choose No sign in.",
   "Enable the read-only scan_solana_wallet tool, then ask Claude to scan a public Solana address.",
 ];
 
@@ -18,9 +18,9 @@ export default function ClaudePage() {
     <div className="min-h-screen bg-solana-dark px-4 py-12 text-white sm:px-6">
       <article className="mx-auto max-w-4xl">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-solana-blue">Solana security × Claude</p>
-        <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Use Solcurity from Claude</h1>
+        <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Use THREATX from Claude</h1>
         <p className="mt-4 max-w-3xl leading-7 text-white/65">
-          Connect Solcurity as a remote MCP tool and ask Claude to run a real, read-only scan of a public Solana Mainnet wallet.
+          Connect THREATX as a remote MCP tool and ask Claude to run a real, read-only scan of a public Solana Mainnet wallet.
           The tool returns on-chain checks, findings, and unavailable-data warnings for Claude to explain.
         </p>
 
@@ -43,7 +43,7 @@ export default function ClaudePage() {
               connector instructions
             </a>{" "}
             if the steps differ.
-            This is a public remote MCP endpoint; no Solcurity account or API key is required.
+            This is a public remote MCP endpoint; no THREATX account or API key is required.
           </p>
         </section>
 
@@ -68,7 +68,7 @@ export default function ClaudePage() {
 
         <p className="mt-6 rounded-xl border border-risk-moderate/20 bg-risk-moderate/5 p-4 text-sm leading-6 text-white/60">
           Scans are rate-limited and depend on public RPC availability. On-chain names, program metadata, and threat reports can be incomplete or misleading.
-          Solcurity is an independent project and is not affiliated with or endorsed by Anthropic.
+          THREATX is an independent project and is not affiliated with or endorsed by Anthropic.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">

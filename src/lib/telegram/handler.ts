@@ -485,7 +485,7 @@ export class TelegramBot {
 A: Scans are not saved as records. If you create an alert, its address and Telegram user/chat IDs are stored until you remove it.
 
 *Q: Do you need my private key?*
-A: Never. Solcurity only analyzes public blockchain data.
+A: Never. THREATX only analyzes public blockchain data.
 
 *Q: How accurate is the risk score?*
 A: Based on public threat intelligence & on-chain analysis. Not a guarantee.
@@ -498,7 +498,7 @@ A: New SPL Token standard with extensions (fees, hooks, etc.). We detect these.
 `;
     } else if (section === 'how') {
       text = `
-📚 *How Solcurity Works*
+📚 *How THREATX Works*
 
 1. *Input* → You provide a public Solana address
 2. *RPC Query* → We fetch on-chain data via public RPC

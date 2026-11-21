@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { WalletFlowTracker } from "@/components/WalletFlowTracker";
 
 export const metadata: Metadata = {
-  title: "Fly Map Wallet Tracker | Solcurity",
+  title: "Fly Map Wallet Tracker | THREATX",
   description: "Interactive map of recent public Solana wallet transactions and decoded balance changes.",
 };
 

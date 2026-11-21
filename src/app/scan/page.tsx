@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { ScanResults } from "@/components/ScanResults";
 
 export const metadata: Metadata = {
-  title: "Scan Results | Solcurity",
+  title: "Scan Results | THREATX",
   description: "View your Solana wallet security scan results",
 };
 

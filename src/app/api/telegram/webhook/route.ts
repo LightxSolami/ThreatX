@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
   const action = searchParams.get('action');
 
   if (!action) {
-    return NextResponse.json({ ok: true, message: 'Solcurity Telegram webhook endpoint' });
+    return NextResponse.json({ ok: true, message: 'THREATX Telegram webhook endpoint' });
   }
   if (!['set', 'delete', 'info', 'me'].includes(action)) {
     return NextResponse.json({ ok: false, error: 'Unknown action' }, { status: 400 });
