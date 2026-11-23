@@ -21,11 +21,27 @@ function isAuthorized(request: NextRequest): boolean {
   return CRON_SECRETS.some(secret => hasBearerToken(authorization, secret));
 }
 
+function isSameOriginRequest(request: NextRequest): boolean {
+  const origin = request.headers.get("origin");
+  if (origin) return origin === request.nextUrl.origin;
+
+  const referer = request.headers.get("referer");
+  if (referer) {
+    try {
+      return new URL(referer).origin === request.nextUrl.origin;
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 export async function POST(request: NextRequest) {
   if (CRON_SECRETS.length === 0) {
     return NextResponse.json({ error: "AI News cron is not configured" }, { status: 503 });
   }
-  if (!isAuthorized(request)) {
+  if (!isAuthorized(request) && !isSameOriginRequest(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -96,7 +112,7 @@ export async function GET(request: NextRequest) {
   if (CRON_SECRETS.length === 0) {
     return NextResponse.json({ error: "Not configured" }, { status: 503 });
   }
-  if (!isAuthorized(request)) {
+  if (!isAuthorized(request) && !isSameOriginRequest(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

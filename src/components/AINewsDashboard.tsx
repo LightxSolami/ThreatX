@@ -22,6 +22,8 @@ export function AINewsDashboard() {
   const [newsError, setNewsError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"live" | "history" | "news">("live");
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [runningNow, setRunningNow] = useState(false);
+  const [runNowMessage, setRunNowMessage] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -64,6 +66,31 @@ export function AINewsDashboard() {
       setRefreshing(false);
     }
   }, []);
+
+  const runNow = useCallback(async () => {
+    setRunningNow(true);
+    setRunNowMessage(null);
+    try {
+      const response = await fetch("/api/ai-news/discuss?action=run-now", {
+        method: "GET",
+        cache: "no-store",
+        headers: { "x-threatx-client": "dashboard" },
+      });
+      const data = await response.json() as { error?: string; message?: string; sessionId?: string };
+      if (!response.ok) {
+        setRunNowMessage(data.error || "Could not start the AI debate.");
+      } else if (data.sessionId) {
+        setRunNowMessage("Debate started and saved successfully.");
+        await fetchData();
+      } else {
+        setRunNowMessage(data.message || "No relevant news was found.");
+      }
+    } catch {
+      setRunNowMessage("Could not reach the AI debate service.");
+    } finally {
+      setRunningNow(false);
+    }
+  }, [fetchData]);
 
   useEffect(() => {
     void fetchData();
@@ -162,6 +189,19 @@ export function AINewsDashboard() {
               <span aria-hidden="true">{refreshing ? "◌" : "↻"}</span>
               {refreshing ? "Syncing…" : "Refresh signal"}
             </button>
+            <button
+              onClick={() => void runNow()}
+              disabled={runningNow}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-solana-blue/30 bg-solana-blue/10 px-4 py-2.5 text-sm font-semibold text-solana-blue transition hover:bg-solana-blue/20 disabled:cursor-wait disabled:opacity-60"
+            >
+              <span aria-hidden="true">{runningNow ? "◌" : "▶"}</span>
+              {runningNow ? "Generating debate…" : "Generate debate now"}
+            </button>
+            {runNowMessage && (
+              <p role="status" className="max-w-xs text-right text-xs text-white/55">
+                {runNowMessage}
+              </p>
+            )}
           </div>
         </div>
       </section>

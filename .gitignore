@@ -37,3 +37,5 @@ solsnake/target-sbf/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

@@ -213,5 +213,5 @@ ${allMessages.map(m => `${m.avatar} ${m.personaName}: ${m.content}`).join("\n")}
 }
 
 export async function runQuickDiscussion(newsItems: NewsItem[]): Promise<DiscussionSession> {
-  return runDiscussionSession(newsItems, 3);
+  return runDiscussionSession(newsItems, 1);
 }
