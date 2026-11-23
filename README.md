@@ -2,7 +2,7 @@
 
 A read-only web application that inspects public Solana account, token, and transaction data. Scans report unavailable checks explicitly; they do not guarantee wallet safety.
 
-**Live Demo:** [Open THREATX](https://solcurity.vercel.app) (deploy to your own domain)
+**Live Demo:** [Open THREATX](https://threatxsol.vercel.app) (deploy to your own domain)
 
 ---
 
