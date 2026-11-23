@@ -87,7 +87,6 @@ export async function POST(request: NextRequest) {
       sessionId: session.id,
       newsCount: newsItems.length,
       durationMs: Date.now() - startTime,
-      summary: session.summary,
     });
   } catch (error) {
     failed = 1;

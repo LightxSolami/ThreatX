@@ -21,17 +21,17 @@ export function stripProviderNamesFromSession(data: string): DiscussionSession {
   try {
     const session = JSON.parse(data) as Omit<DiscussionSession, "rounds"> & {
       rounds: Array<Omit<DiscussionRound, "messages"> & {
-        messages: Array<DiscussionMessage & { provider?: string }>;
+        messages: Array<DiscussionMessage & { provider?: string; avatar?: string }>;
       }>;
     };
     return {
       ...session,
-      summary: session.summary?.replace(/\bGroq\b/gi, "the configured AI service"),
+      summary: undefined,
       rounds: session.rounds.map(round => ({
         ...round,
-        messages: round.messages.map(({ provider: _provider, ...message }) => ({
+        messages: round.messages.map(({ provider: _provider, avatar: _avatar, ...message }) => ({
           ...message,
-          content: message.content.replace(/\bGroq\b/gi, "the configured AI service"),
+          content: "AI commentary is withheld because its factual claims have not been independently verified.",
         })),
       })),
     };

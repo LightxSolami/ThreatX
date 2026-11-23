@@ -142,6 +142,8 @@ The debate dashboard includes a **Generate debate now** action, limited to one m
 
 Verification results are saved with each immutable discussion session in the existing `ai_news_discussions.session_data` JSON field. The table keeps its existing server-only RLS policy, so no additional migration is needed for the optional verification object. Older sessions remain readable; provider metadata is removed from responses. The initial checker does not independently verify every headline, does not establish wallet clustering or wash trading, and does not determine SIMD implementation status; unresolved claims remain explicitly unverified or disputed.
 
+Free-form AI summaries and analyst statements are not served publicly because their individual factual claims are not independently verified. Legacy briefings without a verification report are marked as unverified, and their commentary is withheld. Headlines and articles are publisher reports, not THREATX-confirmed facts. The verifier only promotes claims covered by an implemented evidence check; otherwise it must retain UNVERIFIED or DISPUTED.
+
 The news feed uses Google News RSS, CoinDesk, The Block, CoinTelegraph, Decrypt, Bankless, and Solana's official news/developer feeds. GitHub repository trending is not mixed into news headlines. Google News entries show the publisher when Google supplies it, and top stories are selected across feeds rather than allowing one feed to dominate. X has no unauthenticated official feed, and Reddit's public feed may reject unauthenticated requests; neither is represented as connected unless a supported source is configured.
 
 Generate a strong cron secret locally with Node.js:

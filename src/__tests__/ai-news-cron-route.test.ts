@@ -96,7 +96,9 @@ describe("GET /api/ai-news/discuss", () => {
     const response = await GET(request(`Bearer ${cronSecret}`, null));
 
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toMatchObject({ processed: 1, sessionId: "discussion-1" });
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({ processed: 1, sessionId: "discussion-1" });
+    expect(responseBody).not.toHaveProperty("summary");
     expect(orchestrator.runDiscussionSession).toHaveBeenCalledWith(newsItems);
   });
 

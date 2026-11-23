@@ -282,14 +282,13 @@ async function verifyClaim(item: NewsItem, retrievedAt: string, messages: Discus
   const base = makeBaseClaim(item, retrievedAt, messages);
   if (!matchesFeeBurnDenial(`${item.title} ${item.summary}`)) return base;
 
-  const now = new Date(retrievedAt).toISOString();
   return {
     ...base,
     verificationStatus: "FALSE",
-    confidenceScore: 95,
-    confidenceReason: "The claim directly contradicts the curated protocol rule that half of base transaction fees are burned. Confidence represents evidence strength, not probability.",
+    confidenceScore: 85,
+    confidenceReason: "The claim conflicts with a curated protocol fact linked to official documentation. The page was not live-fetched during this run, so confidence is below the highest tier.",
     explanation: "Solana's base transaction fee mechanism burns 50% of the base fee; the remaining 50% is distributed to the validator. Priority fees are handled separately.",
-    evidenceExcerpt: "50% of the base transaction fee is burned.",
+    evidenceExcerpt: "Curated protocol fact: 50% of the base transaction fee is burned.",
     evidenceType: SOLANA_FEES_SOURCE.evidenceType,
     reportedSources: base.reportedSources,
     supportingSources: [],
@@ -297,7 +296,7 @@ async function verifyClaim(item: NewsItem, retrievedAt: string, messages: Discus
     analystDisagreement: "The protocol fact-check takes priority over analyst consensus.",
     missingInformation: ["Live retrieval timestamp for the official documentation"],
     analystNotes: "This result uses a curated protocol fact. The linked documentation was not live-fetched during this verification run.",
-    lastVerifiedAt: now,
+    lastVerifiedAt: null,
     reviewRequired: true,
   };
 }
@@ -316,6 +315,7 @@ async function verifyTransactionClaim(
         missingInformation: ["A valid Mainnet transaction signature", "Transaction details from an independent source"],
       };
     }
+    const checkedAt = new Date().toISOString();
 
     const source: DebateSource = {
       id: `tx-${transaction.signature}`,
@@ -324,7 +324,7 @@ async function verifyTransactionClaim(
       publisher: "Solana Mainnet RPC",
       publicationDate: transaction.blockTime,
       eventDate: transaction.blockTime,
-      lastRetrievedAt: retrievedAt,
+      lastRetrievedAt: checkedAt,
       evidenceType: "ON_CHAIN_TRANSACTION",
       classification: "primary",
       reliabilityAssessment: "Transaction signature, network genesis hash, slot, block time, fee and instruction count were checked against Mainnet RPC.",
@@ -340,7 +340,7 @@ async function verifyTransactionClaim(
       evidenceType: "ON_CHAIN_TRANSACTION",
       reportedSources: claim.reportedSources,
       supportingSources: [source],
-      lastVerifiedAt: retrievedAt,
+      lastVerifiedAt: checkedAt,
     };
   } catch (error) {
     console.error("Solana transaction verification failed:", error);

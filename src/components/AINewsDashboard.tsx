@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { DiscussionSession, DiscussionMessage, DiscussionRound } from "@/lib/ai-news/orchestrator";
+import { BarChart3, CircleHelp, Code2, Compass, ShieldAlert } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { DiscussionSession } from "@/lib/ai-news/orchestrator";
 import type { NewsItem } from "@/lib/ai-news/news-aggregator";
 import type { VerificationStatus } from "@/lib/ai-news/verification";
 
@@ -11,6 +13,13 @@ interface StoredDiscussion {
   createdAt: string;
   updatedAt: string;
 }
+
+const PERSONA_ICONS: Record<string, LucideIcon> = {
+  "Market Analyst": BarChart3,
+  "Protocol Engineer": Code2,
+  "Ecosystem Strategist": Compass,
+  "Risk Researcher": ShieldAlert,
+};
 
 export function AINewsDashboard() {
   const [latestDiscussion, setLatestDiscussion] = useState<StoredDiscussion | null>(null);
@@ -266,10 +275,12 @@ export function AINewsDashboard() {
                 </div>
               </div>
 
-              {latestDiscussion.session.summary && (
-                <div className="bg-solana-navy/50 border border-solana-blue/30 rounded-xl p-5">
-                  <h3 className="text-solana-blue font-semibold mb-3">◇ Executive Summary</h3>
-                  <div className="text-white/90 whitespace-pre-line">{latestDiscussion.session.summary}</div>
+              {!latestDiscussion.session.verification && (
+                <div role="alert" className="rounded-xl border border-amber-400/25 bg-amber-400/[0.06] p-5">
+                  <h3 className="font-semibold text-amber-100">Legacy briefing — not fact-checked</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/65">
+                    This session predates claim verification. Its AI-generated summary and analyst statements are withheld because they may contain unsupported or incorrect claims. The linked articles are reports, not confirmation.
+                  </p>
                 </div>
               )}
 
@@ -288,7 +299,7 @@ export function AINewsDashboard() {
                       </div>
                       <span className="text-xs text-white/45">
                         {latestDiscussion.session.verification.lastVerifiedAt
-                          ? `Last rule check ${formatDate(latestDiscussion.session.verification.lastVerifiedAt)}`
+                          ? `Last independent evidence check ${formatDate(latestDiscussion.session.verification.lastVerifiedAt)}`
                           : "No claims independently verified"}
                       </span>
                     </div>
@@ -426,39 +437,35 @@ export function AINewsDashboard() {
                 </section>
               )}
 
-              <div className="space-y-4">
-                {latestDiscussion.session.rounds.map((round: DiscussionRound) => (
-                  <div key={round.round} className="bg-solana-navy/50 border border-white/10 rounded-xl overflow-hidden">
-                    <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                      <h3 className="font-semibold text-white">
-                        {round.round === 1 ? "Independent Analyst Perspectives" : `Discussion Round ${round.round}`}
-                      </h3>
-                      <span className="text-white/50 text-sm">{round.messages.length} experts</span>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      {round.messages.map((msg: DiscussionMessage, idx: number) => (
-                        <div
-                          key={`${round.round}-${idx}`}
-                          className="flex gap-3 p-3 rounded-lg bg-white/5 border-l-4"
-                          style={{ borderLeftColor: msg.color }}
-                        >
-                          <div className="text-2xl">{msg.avatar}</div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-white">{msg.personaName}</span>
-                              <span className="text-xs text-white/50 px-2 py-0.5 rounded bg-white/10">{msg.role}</span>
-                            </div>
-                            <div className="text-white/90 text-sm leading-relaxed">{msg.content}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+              {latestDiscussion.session.verification && (
+                <div className="rounded-xl border border-white/10 bg-solana-navy/50 p-5">
+                  <h3 className="font-semibold text-white">Independent analyst perspectives</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/55">
+                    Free-form AI commentary is not published as factual analysis because its individual claims are not independently checked. Review the claim statuses, cited evidence, and unknowns above instead.
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {Array.from(new Map(
+                      latestDiscussion.session.rounds
+                        .flatMap(round => round.messages)
+                        .map(message => [message.personaId, { role: message.role }])
+                    ).values()).map(persona => {
+                      const Icon = PERSONA_ICONS[persona.role] || CircleHelp;
+                      return (
+                        <span key={persona.role} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/65">
+                          <Icon aria-hidden="true" size={14} strokeWidth={1.8} />
+                          {persona.role}
+                        </span>
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
 
               <div className="bg-solana-navy/50 border border-white/10 rounded-xl p-4">
-                <h3 className="text-white/50 text-sm mb-3">Source Articles</h3>
+                <h3 className="text-white/70 text-sm font-semibold">Reported articles — not independent verification</h3>
+                <p className="mb-3 mt-1 text-xs text-white/45">
+                  These links show what publishers reported. Their claims are not confirmed unless the evidence review above says so.
+                </p>
                 <div className="space-y-2">
                   {latestDiscussion.session.newsItems.slice(0, 5).map((item: NewsItem) => {
                     const categoryColors: Record<string, string> = {
@@ -536,9 +543,9 @@ export function AINewsDashboard() {
                   </span>
                   <span className="block text-right">
                     <span className="block text-white/50 text-sm">{formatDate(discussion.createdAt)}</span>
-                    {discussion.session.summary && (
-                      <span className="mt-1 block line-clamp-2 text-sm text-white/70">{discussion.session.summary}</span>
-                    )}
+                    <span className="mt-1 block line-clamp-2 text-sm text-white/60">
+                      {discussion.session.verification?.overallAssessment || "Legacy session — claims were not independently verified; AI commentary is withheld."}
+                    </span>
                   </span>
                 </span>
               </button>
@@ -553,6 +560,9 @@ export function AINewsDashboard() {
 
       {activeTab === "news" && (
         <div className="space-y-4">
+          <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.05] p-4 text-sm text-amber-100/75">
+            These are publisher-reported headlines, not independently verified facts. Check the original article and evidence before relying on a claim.
+          </div>
           {topNews.length > 0 ? (
             topNews.map((item) => (
               <a

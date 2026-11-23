@@ -27,8 +27,8 @@ function newsItem(title: string, summary = "", id = "article-1"): NewsItem {
 }
 
 const analysts: DiscussionMessage[] = [
-  { personaId: "market", personaName: "Analyst", role: "Market Analyst", content: "Needs corroboration.", timestamp: now, color: "#fff", avatar: "A" },
-  { personaId: "risk", personaName: "Researcher", role: "Risk Researcher", content: "Evidence is missing.", timestamp: now, color: "#fff", avatar: "R" },
+  { personaId: "market", personaName: "Analyst", role: "Market Analyst", content: "Needs corroboration.", timestamp: now, color: "#fff" },
+  { personaId: "risk", personaName: "Researcher", role: "Risk Researcher", content: "Evidence is missing.", timestamp: now, color: "#fff" },
 ];
 
 describe("AI debate evidence verification", () => {
@@ -54,6 +54,7 @@ describe("AI debate evidence verification", () => {
       verificationStatus: "FALSE",
       explanation: expect.stringContaining("burns 50%"),
       contradictingSources: [{ evidenceType: "OFFICIAL_PROTOCOL_DOCUMENTATION" }],
+      lastVerifiedAt: null,
     });
   });
 

@@ -9,7 +9,6 @@ export interface AIPersona {
   role: string;
   systemPrompt: string;
   color: string;
-  avatar: string;
 }
 
 const PANEL_SAFETY_INSTRUCTIONS =
@@ -25,7 +24,6 @@ Assess SOL market developments, institutional accumulation, tokenomics, market t
 Separate measurable fundamentals from price speculation. Never confuse total treasury holdings with new purchases.
 Do not invent metrics, sources, transaction details, or certainty. Identify what evidence is missing.`,
     color: "#00ff99",
-    avatar: "📊",
   },
   {
     id: "builder",
@@ -36,7 +34,6 @@ Check protocol claims about fees, fee burning, SIMD proposals, validator economi
 Distinguish a proposal from an approved or implemented change. Do not invent versions, metrics, sources, or certainty.
 Explain technical tradeoffs and state which primary evidence is missing.`,
     color: "#00aaff",
-    avatar: "⚙️",
   },
   {
     id: "strategist",
@@ -47,7 +44,6 @@ Assess DeFi TVL, stablecoin activity, organic adoption, protocol revenue, users,
 Separate measured usage from bot-driven activity and narrative. Never invent statistics, sources, or certainty.
 Identify what evidence would support or weaken the thesis.`,
     color: "#ff66cc",
-    avatar: "🎯",
   },
   {
     id: "critic",
@@ -58,7 +54,6 @@ Investigate claims about wash trading, MEV, manipulation, Sybil activity, and pr
 A suspicious pattern alone is not proof of misconduct. Require reproducible transaction-level evidence.
 Challenge assumptions, identify missing evidence, and never invent sources, statistics, or certainty.`,
     color: "#ff4444",
-    avatar: "🔍",
   },
 ];
 
@@ -69,7 +64,6 @@ export interface DiscussionMessage {
   content: string;
   timestamp: string;
   color: string;
-  avatar: string;
 }
 
 export interface DiscussionRound {
@@ -171,7 +165,6 @@ export async function runDiscussionSession(newsItems: NewsItem[], maxRounds = 4)
         content: response.content,
         timestamp: new Date().toISOString(),
         color: persona.color,
-        avatar: persona.avatar,
       };
     }));
 
@@ -181,7 +174,7 @@ export async function runDiscussionSession(newsItems: NewsItem[], maxRounds = 4)
     rounds.push({ round, topic: `Round ${round}`, messages: roundMessages });
   }
 
-  const verification = await createVerificationReport(newsItems, allMessages, startedAt);
+  const verification = await createVerificationReport(newsItems, allMessages, new Date().toISOString());
   const summaryPrompt = `Create a balanced summary of the discussion and verification results:
 1. Evidence-supported findings and verification status counts
 2. Main analyst disagreement
@@ -189,7 +182,7 @@ export async function runDiscussionSession(newsItems: NewsItem[], maxRounds = 4)
 4. What evidence is still missing
 
 Discussion:
-${allMessages.map(m => `${m.avatar} ${m.personaName} (${m.role}): ${m.content}`).join("\n")}
+${allMessages.map(m => `${m.personaName} (${m.role}): ${m.content}`).join("\n")}
 
 Verification status counts:
 ${JSON.stringify(verification.counts)}
