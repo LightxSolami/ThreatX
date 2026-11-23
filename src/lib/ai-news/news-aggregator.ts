@@ -10,6 +10,7 @@ const NewsItemSchema = z.object({
   publishedAt: z.string().datetime({ offset: true }),
   retrievedAt: z.string().datetime({ offset: true }).optional(),
   category: z.enum(["solana", "defi", "nft", "infrastructure", "regulation", "market", "security", "general"]),
+  feedSource: z.string().optional(),
   tags: z.array(z.string()).default([]),
   relevanceScore: z.number().min(0).max(1).default(0.5),
 });
@@ -17,6 +18,7 @@ const NewsItemSchema = z.object({
 export type NewsItem = z.infer<typeof NewsItemSchema>;
 
 const RSS_FEEDS = [
+  { name: "Google News", url: "https://news.google.com/rss/search?q=Solana+OR+%22SOL+token%22&hl=en-US&gl=US&ceid=US:en", category: "market" as const },
   { name: "CoinDesk", url: "https://www.coindesk.com/arc/outboundfeeds/rss/", category: "market" as const },
   { name: "The Block", url: "https://www.theblock.co/rss.xml", category: "market" as const },
   { name: "CoinTelegraph", url: "https://cointelegraph.com/rss", category: "market" as const },
@@ -36,11 +38,13 @@ const SOLANA_ECOSYSTEM_KEYWORDS = [
   "helius", "quicknode", "alchemy", "triton", "genesysgo", "shyft",
 ];
 
-function calculateRelevance(title: string, summary: string): number {
+export function calculateRelevance(title: string, summary: string): number {
   const text = (title + " " + summary).toLowerCase();
   let score = 0;
   for (const keyword of SOLANA_ECOSYSTEM_KEYWORDS) {
-    if (text.includes(keyword.toLowerCase())) {
+    const escapedKeyword = keyword.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pattern = new RegExp(`(^|[^a-z0-9])${escapedKeyword}(?=$|[^a-z0-9])`, "i");
+    if (pattern.test(text)) {
       score += 0.15;
     }
   }
@@ -76,16 +80,17 @@ async function fetchRSSFeed(feed: { name: string; url: string; category: string 
   }
 }
 
-function parseRSS(xml: string, source: string, feedCategory: string): NewsItem[] {
+export function parseRSS(xml: string, source: string, feedCategory: string): NewsItem[] {
   const items: NewsItem[] = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   let match;
 
   while ((match = itemRegex.exec(xml)) !== null) {
     const itemXml = match[1];
-    const title = extractTag(itemXml, "title");
-    const link = extractTag(itemXml, "link");
-    const description = extractTag(itemXml, "description") || extractTag(itemXml, "content:encoded") || "";
+    const title = decodeXmlText(extractTag(itemXml, "title") || "");
+    const link = decodeXmlText(extractTag(itemXml, "link") || "");
+    const description = decodeXmlText(extractTag(itemXml, "description") || extractTag(itemXml, "content:encoded") || "");
+    const originalPublisher = decodeXmlText(extractTag(itemXml, "source") || "");
     const pubDate = extractTag(itemXml, "pubDate") || extractTag(itemXml, "dc:date");
 
     if (!title || !link || !pubDate || !isSafeSourceUrl(link)) continue;
@@ -106,10 +111,13 @@ function parseRSS(xml: string, source: string, feedCategory: string): NewsItem[]
 
     items.push({
       id: `${source}-${Buffer.from(link).toString("base64").slice(0, 16)}`,
-      title: title.replace(/&[a-z]+;/g, " ").trim(),
+      title: title.trim(),
       summary: cleanSummary,
       url: link,
-      source,
+      source: source === "Google News" && originalPublisher
+        ? `Google News · ${originalPublisher}`
+        : source,
+      feedSource: source,
       publishedAt,
       retrievedAt: new Date().toISOString(),
       category,
@@ -127,6 +135,25 @@ function extractTag(xml: string, tag: string): string | null {
   return match ? match[1].trim() : null;
 }
 
+function decodeXmlText(value: string): string {
+  const cdata = value.match(/^<!\[CDATA\[([\s\S]*)\]\]>$/);
+  const text = cdata ? cdata[1] : value;
+  const decodeCodePoint = (code: string, radix: number) => {
+    const point = parseInt(code, radix);
+    return Number.isInteger(point) && point >= 0 && point <= 0x10ffff
+      ? String.fromCodePoint(point)
+      : " ";
+  };
+  return text
+    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => decodeCodePoint(code, 16))
+    .replace(/&#(\d+);/g, (_, code: string) => decodeCodePoint(code, 10))
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+}
+
 function extractTags(title: string, summary: string): string[] {
   const text = (title + " " + summary).toLowerCase();
   const tags: string[] = [];
@@ -140,33 +167,6 @@ function extractTags(title: string, summary: string): string[] {
     if (text.includes(tag)) tags.push(tag);
   }
   return tags.slice(0, 5);
-}
-
-async function fetchGitHubTrending(): Promise<NewsItem[]> {
-  try {
-    const response = await fetch("https://api.github.com/search/repositories?q=solana+language:rust&sort=stars&order=desc&per_page=10", {
-      headers: { Accept: "application/vnd.github.v3+json" },
-      next: { revalidate: 3600 },
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!response.ok) return [];
-
-    const data = await response.json();
-    return data.items?.slice(0, 5).map((repo: any) => ({
-      id: `github-${repo.id}`,
-      title: `GitHub: ${repo.full_name}`,
-      summary: repo.description || "No description",
-      url: repo.html_url,
-      source: "GitHub Trending",
-      publishedAt: repo.updated_at,
-      retrievedAt: new Date().toISOString(),
-      category: "infrastructure" as const,
-      tags: repo.topics?.slice(0, 5) || [],
-      relevanceScore: 0.8,
-    })).filter((item: NewsItem) => isSafeSourceUrl(item.url)) || [];
-  } catch {
-    return [];
-  }
 }
 
 async function fetchSolanaFoundationUpdates(): Promise<NewsItem[]> {
@@ -197,13 +197,12 @@ async function fetchSolanaFoundationUpdates(): Promise<NewsItem[]> {
 }
 
 export async function fetchAllNews(): Promise<NewsItem[]> {
-  const [rssResults, githubResults, solanaResults] = await Promise.all([
+  const [rssResults, solanaResults] = await Promise.all([
     Promise.all(RSS_FEEDS.map(fetchRSSFeed)),
-    fetchGitHubTrending(),
     fetchSolanaFoundationUpdates(),
   ]);
 
-  const allItems = [...rssResults.flat(), ...githubResults, ...solanaResults];
+  const allItems = [...rssResults.flat(), ...solanaResults];
 
   const uniqueItems = new Map<string, NewsItem>();
   for (const item of allItems) {
@@ -216,18 +215,40 @@ export async function fetchAllNews(): Promise<NewsItem[]> {
   return Array.from(uniqueItems.values())
     .filter(item => NewsItemSchema.safeParse(item).success && isSafeSourceUrl(item.url))
     .sort((a, b) => {
-      const currentTime = Date.now();
-      const aIsFreshMarketNews = a.category === "market" && currentTime - Date.parse(a.publishedAt) <= 24 * 60 * 60 * 1000;
-      const bIsFreshMarketNews = b.category === "market" && currentTime - Date.parse(b.publishedAt) <= 24 * 60 * 60 * 1000;
-      if (aIsFreshMarketNews !== bIsFreshMarketNews) return aIsFreshMarketNews ? -1 : 1;
-      return b.relevanceScore - a.relevanceScore || new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+      const aTime = Date.parse(a.publishedAt);
+      const bTime = Date.parse(b.publishedAt);
+      const now = Date.now();
+      const aIsFresh = now - aTime <= 24 * 60 * 60 * 1000;
+      const bIsFresh = now - bTime <= 24 * 60 * 60 * 1000;
+      if (aIsFresh !== bIsFresh) return aIsFresh ? -1 : 1;
+      return bTime - aTime || b.relevanceScore - a.relevanceScore;
     })
     .slice(0, 50);
 }
 
+export function selectDiverseNews(news: NewsItem[], limit: number): NewsItem[] {
+  const selected: NewsItem[] = [];
+  const sourceCounts = new Map<string, number>();
+  const sourceCount = new Set(news.map(item => item.feedSource || item.source)).size;
+  const perSourceLimit = sourceCount <= 1
+    ? limit
+    : Math.max(1, Math.min(Math.ceil(limit * 0.3), Math.ceil(limit / sourceCount)));
+
+  for (const item of news) {
+    const publisher = item.feedSource || item.source;
+    const count = sourceCounts.get(publisher) || 0;
+    if (count < perSourceLimit && selected.length < limit) {
+      selected.push(item);
+      sourceCounts.set(publisher, count + 1);
+    }
+  }
+
+  return selected;
+}
+
 export async function getTopNews(limit = 10): Promise<NewsItem[]> {
   const allNews = await fetchAllNews();
-  return allNews.slice(0, limit);
+  return selectDiverseNews(allNews, limit);
 }
 
 export async function getNewsByCategory(category: NewsItem["category"], limit = 10): Promise<NewsItem[]> {
