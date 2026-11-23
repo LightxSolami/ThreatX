@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { hasBearerToken } from "@/lib/telegram/auth";
 import { getTopNews } from "@/lib/ai-news/news-aggregator";
 import { runDiscussionSession, runQuickDiscussion } from "@/lib/ai-news/orchestrator";
-import { saveDiscussionSession, deleteOldDiscussions } from "@/lib/ai-news/discussion-repository";
+import { saveDiscussionSession } from "@/lib/ai-news/discussion-repository";
+import { getClientIp, RateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,7 +15,8 @@ const CRON_SECRETS = [
   process.env.TELEGRAM_CRON_SECRET,
 ].filter((secret): secret is string => Boolean(secret));
 const MAX_NEWS_ITEMS = Number(process.env.AI_NEWS_MAX_ITEMS) || 8;
-const QUICK_MODE = process.env.AI_NEWS_QUICK_MODE === "true";
+const QUICK_MODE = process.env.AI_NEWS_QUICK_MODE !== "false";
+const manualRunLimiter = new RateLimiter(1, 5 * 60 * 1000);
 
 function isAuthorized(request: NextRequest): boolean {
   const authorization = request.headers.get("authorization");
@@ -41,8 +43,18 @@ export async function POST(request: NextRequest) {
   if (CRON_SECRETS.length === 0) {
     return NextResponse.json({ error: "AI News cron is not configured" }, { status: 503 });
   }
-  if (!isAuthorized(request) && !isSameOriginRequest(request)) {
+  const cronAuthorized = isAuthorized(request);
+  if (!cronAuthorized && !isSameOriginRequest(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!cronAuthorized) {
+    const rateLimit = manualRunLimiter.check(getClientIp(request.headers));
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "A debate was generated recently. Try again in a few minutes." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil((rateLimit.resetAt - Date.now()) / 1000)) } }
+      );
+    }
   }
 
   const startTime = Date.now();
@@ -68,8 +80,6 @@ export async function POST(request: NextRequest) {
     processed = 1;
 
     console.log(`[AI News] Discussion completed: ${session.id}`);
-
-    await deleteOldDiscussions(30);
 
     return NextResponse.json({
       processed,
@@ -119,8 +129,6 @@ export async function GET(request: NextRequest) {
   switch (action) {
     case "test":
       return NextResponse.json({ ok: true, message: "Cron endpoint is reachable" });
-    case "run-now":
-      return POST(request);
     default:
       return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   }

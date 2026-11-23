@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isSafeSourceUrl } from "./verification";
 
 const NewsItemSchema = z.object({
   id: z.string(),
@@ -7,6 +8,7 @@ const NewsItemSchema = z.object({
   url: z.string().url(),
   source: z.string(),
   publishedAt: z.string().datetime({ offset: true }),
+  retrievedAt: z.string().datetime({ offset: true }).optional(),
   category: z.enum(["solana", "defi", "nft", "infrastructure", "regulation", "market", "security", "general"]),
   tags: z.array(z.string()).default([]),
   relevanceScore: z.number().min(0).max(1).default(0.5),
@@ -61,6 +63,7 @@ async function fetchRSSFeed(feed: { name: string; url: string; category: string 
     const response = await fetch(feed.url, {
       headers: { "User-Agent": "THREATX-AI-News/1.0" },
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(10_000),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -83,9 +86,11 @@ function parseRSS(xml: string, source: string, feedCategory: string): NewsItem[]
     const title = extractTag(itemXml, "title");
     const link = extractTag(itemXml, "link");
     const description = extractTag(itemXml, "description") || extractTag(itemXml, "content:encoded") || "";
-    const pubDate = extractTag(itemXml, "pubDate") || extractTag(itemXml, "dc:date") || new Date().toISOString();
+    const pubDate = extractTag(itemXml, "pubDate") || extractTag(itemXml, "dc:date");
 
-    if (!title || !link) continue;
+    if (!title || !link || !pubDate || !isSafeSourceUrl(link)) continue;
+    const publicationDate = new Date(pubDate);
+    if (Number.isNaN(publicationDate.getTime())) continue;
 
     const cleanSummary = description
       .replace(/<[^>]+>/g, "")
@@ -93,7 +98,7 @@ function parseRSS(xml: string, source: string, feedCategory: string): NewsItem[]
       .trim()
       .slice(0, 500);
 
-    const publishedAt = new Date(pubDate).toISOString();
+    const publishedAt = publicationDate.toISOString();
     const relevanceScore = calculateRelevance(title, cleanSummary);
     const category = categorizeItem(title, cleanSummary, feedCategory);
 
@@ -106,6 +111,7 @@ function parseRSS(xml: string, source: string, feedCategory: string): NewsItem[]
       url: link,
       source,
       publishedAt,
+      retrievedAt: new Date().toISOString(),
       category,
       tags: extractTags(title, cleanSummary),
       relevanceScore,
@@ -141,6 +147,7 @@ async function fetchGitHubTrending(): Promise<NewsItem[]> {
     const response = await fetch("https://api.github.com/search/repositories?q=solana+language:rust&sort=stars&order=desc&per_page=10", {
       headers: { Accept: "application/vnd.github.v3+json" },
       next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(10_000),
     });
     if (!response.ok) return [];
 
@@ -152,10 +159,11 @@ async function fetchGitHubTrending(): Promise<NewsItem[]> {
       url: repo.html_url,
       source: "GitHub Trending",
       publishedAt: repo.updated_at,
+      retrievedAt: new Date().toISOString(),
       category: "infrastructure" as const,
       tags: repo.topics?.slice(0, 5) || [],
       relevanceScore: 0.8,
-    })) || [];
+    })).filter((item: NewsItem) => isSafeSourceUrl(item.url)) || [];
   } catch {
     return [];
   }
@@ -166,6 +174,7 @@ async function fetchSolanaFoundationUpdates(): Promise<NewsItem[]> {
     const response = await fetch("https://solana.com/api/news", {
       headers: { Accept: "application/json" },
       next: { revalidate: 600 },
+      signal: AbortSignal.timeout(10_000),
     });
     if (!response.ok) return [];
 
@@ -177,10 +186,11 @@ async function fetchSolanaFoundationUpdates(): Promise<NewsItem[]> {
       url: `https://solana.com${item.url || "/news/" + item.slug}`,
       source: "Solana Foundation",
       publishedAt: item.date || item.publishedAt,
+      retrievedAt: new Date().toISOString(),
       category: "solana" as const,
       tags: item.tags || [],
       relevanceScore: 1.0,
-    })) || [];
+    })).filter((item: NewsItem) => isSafeSourceUrl(item.url)) || [];
   } catch {
     return [];
   }
@@ -204,7 +214,14 @@ export async function fetchAllNews(): Promise<NewsItem[]> {
   }
 
   return Array.from(uniqueItems.values())
-    .sort((a, b) => b.relevanceScore - a.relevanceScore || new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .filter(item => NewsItemSchema.safeParse(item).success && isSafeSourceUrl(item.url))
+    .sort((a, b) => {
+      const currentTime = Date.now();
+      const aIsFreshMarketNews = a.category === "market" && currentTime - Date.parse(a.publishedAt) <= 24 * 60 * 60 * 1000;
+      const bIsFreshMarketNews = b.category === "market" && currentTime - Date.parse(b.publishedAt) <= 24 * 60 * 60 * 1000;
+      if (aIsFreshMarketNews !== bIsFreshMarketNews) return aIsFreshMarketNews ? -1 : 1;
+      return b.relevanceScore - a.relevanceScore || new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+    })
     .slice(0, 50);
 }
 

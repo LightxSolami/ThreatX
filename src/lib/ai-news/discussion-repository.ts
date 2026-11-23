@@ -1,6 +1,6 @@
 import "server-only";
 import { getThreatIntelAdminClient } from "@/lib/threat-intel/supabase-client";
-import type { DiscussionSession } from "./orchestrator";
+import type { DiscussionMessage, DiscussionRound, DiscussionSession } from "./orchestrator";
 
 export interface StoredDiscussion {
   id: string;
@@ -17,19 +17,38 @@ function getAdminClient() {
   return result.client;
 }
 
-function parseSessionData(data: string): DiscussionSession {
+export function stripProviderNamesFromSession(data: string): DiscussionSession {
   try {
-    return JSON.parse(data);
+    const session = JSON.parse(data) as Omit<DiscussionSession, "rounds"> & {
+      rounds: Array<Omit<DiscussionRound, "messages"> & {
+        messages: Array<DiscussionMessage & { provider?: string }>;
+      }>;
+    };
+    return {
+      ...session,
+      summary: session.summary?.replace(/\bGroq\b/gi, "the configured AI service"),
+      rounds: session.rounds.map(round => ({
+        ...round,
+        messages: round.messages.map(({ provider: _provider, ...message }) => ({
+          ...message,
+          content: message.content.replace(/\bGroq\b/gi, "the configured AI service"),
+        })),
+      })),
+    };
   } catch {
     throw new Error("Invalid session data");
   }
+}
+
+function parseSessionData(data: string): DiscussionSession {
+  return stripProviderNamesFromSession(data);
 }
 
 export async function saveDiscussionSession(session: DiscussionSession): Promise<void> {
   const client = getAdminClient();
   const result = await client
     .from("ai_news_discussions")
-    .upsert({
+    .insert({
       id: session.id,
       session_data: JSON.stringify(session),
       updated_at: new Date().toISOString(),

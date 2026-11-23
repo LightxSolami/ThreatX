@@ -112,7 +112,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `TOGETHER_API_KEY` | No | — | Optional server-only AI News provider key |
 | `AI_NEWS_CRON_SECRET` | No | — | Optional dedicated bearer secret for the AI News scheduled endpoint; Vercel Cron uses `CRON_SECRET` |
 | `AI_NEWS_MAX_ITEMS` | No | `8` | Maximum headlines included in each scheduled debate |
-| `AI_NEWS_QUICK_MODE` | No | `false` | Use three discussion rounds instead of four |
+| `AI_NEWS_QUICK_MODE` | No | `true` | Use one evidence-focused panel round instead of four discussion rounds |
 | `RATE_LIMIT_MAX_REQUESTS` | No | `10` | Max scans per IP per window |
 | `RATE_LIMIT_WINDOW_SECONDS` | No | `60` | Rate limit window in seconds |
 | `CACHE_TTL_SECONDS` | No | `300` | Scan result cache TTL |
@@ -137,6 +137,10 @@ The MCP tool scans public Mainnet data, is rate-limited, and never signs or send
 ### AI Debate setup
 
 The AI Debate dashboard at `/ai-news` is linked from the home dashboard and main navigation. It publishes debates once daily using the Vercel Cron entry in `vercel.json`, which is compatible with Vercel Hobby. The cron sends an authenticated `GET` request and requires `CRON_SECRET` in Vercel. Configure at least one server-side provider key (`GROQ_API_KEY`, `GEMINI_API_KEY`, `HUGGINGFACE_API_KEY`, or `TOGETHER_API_KEY`). Do not expose provider keys with `NEXT_PUBLIC_` prefixes. Telegram alerts continue to run every five minutes through the included GitHub Actions workflow.
+
+The debate dashboard includes a **Generate debate now** action, limited to one manual run per five minutes per server instance. Quick mode runs one response from each of the four independent roles to stay within serverless execution limits. AI output is analysis, not verification: one headline per article is initially assessed, and claims remain unverified unless a supported check finds evidence. The current checks include a curated Solana base-fee burn fact, Mainnet transaction-signature lookup, and conflicts in reported SOL treasury/supply metrics. Transaction checks use the public Mainnet RPC with a timeout. Article content is untrusted input; AI-generated commentary cannot introduce citation URLs into verification results.
+
+Verification results are saved with each immutable discussion session in the existing `ai_news_discussions.session_data` JSON field. The table keeps its existing server-only RLS policy, so no additional migration is needed for the optional verification object. Older sessions remain readable; provider metadata is removed from responses. The initial checker does not independently verify every headline, does not establish wallet clustering or wash trading, and does not determine SIMD implementation status; unresolved claims remain explicitly unverified or disputed.
 
 Generate a strong cron secret locally with Node.js:
 

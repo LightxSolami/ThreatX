@@ -104,11 +104,11 @@ export function ScanAiTools({ result }: ScanAiToolsProps) {
             Understand this scan
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-white/55">
-            Get a short explanation using Qwen via Groq, or copy a limited scan summary to Claude yourself.
+            Get a short AI-generated explanation, or copy a limited scan summary to Claude yourself.
             No wallet connection or transaction signing is used.
           </p>
           <p className="mt-2 text-xs text-white/40">
-            The explanation sends scan checks and up to 8 findings to Groq. Provider availability and free-tier limits may vary.
+            The explanation sends scan checks and up to 8 findings to our configured AI service. Availability and usage limits may vary.
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">

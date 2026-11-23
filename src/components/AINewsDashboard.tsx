@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { DiscussionSession, DiscussionMessage, DiscussionRound } from "@/lib/ai-news/orchestrator";
 import type { NewsItem } from "@/lib/ai-news/news-aggregator";
+import type { VerificationStatus } from "@/lib/ai-news/verification";
 
 interface StoredDiscussion {
   id: string;
@@ -71,10 +72,9 @@ export function AINewsDashboard() {
     setRunningNow(true);
     setRunNowMessage(null);
     try {
-      const response = await fetch("/api/ai-news/discuss?action=run-now", {
-        method: "GET",
+      const response = await fetch("/api/ai-news/discuss", {
+        method: "POST",
         cache: "no-store",
-        headers: { "x-threatx-client": "dashboard" },
       });
       const data = await response.json() as { error?: string; message?: string; sessionId?: string };
       if (!response.ok) {
@@ -127,6 +127,14 @@ export function AINewsDashboard() {
       general: "bg-gray-500/20 text-gray-400",
     };
     return colors[category] || colors.general;
+  };
+
+  const verificationStatusClass: Record<VerificationStatus, string> = {
+    VERIFIED: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+    PARTIALLY_VERIFIED: "border-amber-400/30 bg-amber-400/10 text-amber-200",
+    FALSE: "border-red-400/30 bg-red-400/10 text-red-300",
+    UNVERIFIED: "border-white/15 bg-white/5 text-white/60",
+    DISPUTED: "border-purple-400/30 bg-purple-400/10 text-purple-200",
   };
 
   return (
@@ -265,11 +273,166 @@ export function AINewsDashboard() {
                 </div>
               )}
 
+              {latestDiscussion.session.verification && (
+                <section className="space-y-4" aria-label="Evidence verification">
+                  <div className="rounded-xl border border-[#62c99b]/25 bg-[#62c99b]/[0.05] p-5">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <h3 className="font-semibold text-white">Overall evidence verdict</h3>
+                        <p className="mt-1 text-sm text-white/75">
+                          {latestDiscussion.session.verification.overallAssessment}
+                        </p>
+                        <p className="mt-1 text-sm text-white/55">
+                          Analyst agreement is not verification. Unverified means evidence is insufficient, not that a claim is false.
+                        </p>
+                      </div>
+                      <span className="text-xs text-white/45">
+                        {latestDiscussion.session.verification.lastVerifiedAt
+                          ? `Last rule check ${formatDate(latestDiscussion.session.verification.lastVerifiedAt)}`
+                          : "No claims independently verified"}
+                      </span>
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {(Object.entries(latestDiscussion.session.verification.counts) as [VerificationStatus, number][]).map(([status, count]) => (
+                        <span key={status} className={`rounded-full border px-3 py-1 text-xs ${verificationStatusClass[status]}`}>
+                          {status.replaceAll("_", " ")}: {count}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-solana-navy/50 p-5">
+                    <h3 className="font-semibold text-white">Claim-by-claim analysis</h3>
+                    <div className="mt-3 space-y-3">
+                      {latestDiscussion.session.verification.claims.map((claim) => (
+                        <details key={claim.claimId} className="rounded-lg border border-white/10 bg-white/[0.025]">
+                          <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 p-4">
+                            <span className="min-w-0 flex-1 text-sm text-white">{claim.originalClaim}</span>
+                            <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold ${verificationStatusClass[claim.verificationStatus]}`}>
+                              {claim.verificationStatus.replaceAll("_", " ")}
+                            </span>
+                            {claim.reviewRequired && (
+                              <span className="rounded-full border border-amber-400/20 bg-amber-400/[0.05] px-2.5 py-1 text-[10px] text-amber-100/70">
+                                Human review recommended
+                              </span>
+                            )}
+                          </summary>
+                          <div className="space-y-3 border-t border-white/10 px-4 py-4 text-sm">
+                            <p className="text-white/70">{claim.explanation}</p>
+                            <p className="text-white/45">
+                              Evidence confidence: {claim.confidenceScore}% — {claim.confidenceReason}
+                            </p>
+                            {claim.evidenceExcerpt && (
+                              <div>
+                                <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/45">Reported or checked evidence</h4>
+                                <blockquote className="border-l-2 border-solana-blue/50 pl-3 text-white/60">
+                                  {claim.evidenceExcerpt}
+                                </blockquote>
+                              </div>
+                            )}
+                            {claim.treasuryMetrics && (
+                              <div className="rounded-lg border border-solana-blue/15 bg-solana-blue/[0.04] p-3">
+                                <h4 className="text-xs font-semibold uppercase tracking-wide text-solana-blue">Treasury figures reported</h4>
+                                <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                                  <p className="text-white/65">
+                                    Total holdings: {claim.treasuryMetrics.totalHoldingsSol?.toLocaleString() ?? "not reported"} SOL
+                                  </p>
+                                  <p className="text-white/65">
+                                    Purchases during period: {claim.treasuryMetrics.periodPurchasesSol?.toLocaleString() ?? "not reported"} SOL
+                                  </p>
+                                </div>
+                                <p className="mt-2 text-xs text-white/40">
+                                  Reported figures are separated; purchases, rewards, transfers, and unclassified balance changes are not assumed to be equivalent.
+                                </p>
+                              </div>
+                            )}
+                            <div>
+                              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/45">Supporting sources</h4>
+                              {claim.supportingSources.length > 0 ? claim.supportingSources.map((source) => (
+                                <a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer" className="block text-solana-blue underline underline-offset-2">
+                                  {source.title} · {source.publisher}
+                                </a>
+                              )) : <p className="text-white/45">No verified supporting source.</p>}
+                            </div>
+                            {claim.reportedSources.length > 0 && (
+                              <div>
+                                <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/45">Original reporting (not independent proof)</h4>
+                                {claim.reportedSources.map((source) => (
+                                  <div key={source.id}>
+                                    <a href={source.url} target="_blank" rel="noopener noreferrer" className="block text-solana-blue underline underline-offset-2">
+                                      {source.title} · {source.publisher}
+                                    </a>
+                                    <p className="mt-1 text-xs text-white/40">{source.reliabilityAssessment}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {claim.contradictingSources.length > 0 && (
+                              <div>
+                                <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/45">Contradicting sources</h4>
+                                {claim.contradictingSources.map((source) => (
+                                  <a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer" className="block text-solana-blue underline underline-offset-2">
+                                    {source.title} · {source.publisher}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                            <p className="text-white/45">{claim.analystDisagreement}</p>
+                            {claim.missingInformation.length > 0 && (
+                              <p className="text-amber-100/70">Missing: {claim.missingInformation.join("; ")}</p>
+                            )}
+                            <p className="text-xs text-white/35">{claim.analystNotes}</p>
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    <div className="rounded-xl border border-white/10 bg-solana-navy/50 p-5">
+                      <h3 className="font-semibold text-white">Evidence sources</h3>
+                      <div className="mt-3 space-y-2">
+                        {Array.from(new Map(
+                          latestDiscussion.session.verification.claims
+                            .flatMap(claim => [...claim.reportedSources, ...claim.supportingSources, ...claim.contradictingSources])
+                            .map(source => [source.id, source])
+                        ).values()).map((source) => (
+                          <a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer" className="block rounded-lg bg-white/[0.035] p-3 hover:bg-white/[0.07]">
+                            <span className="block text-sm text-white">{source.title}</span>
+                            <span className="mt-1 block text-xs text-white/45">
+                              {source.publisher} · {source.classification} · {source.publicationDate ? formatDate(source.publicationDate) : "Publication date unavailable"}
+                            </span>
+                            <span className="mt-1 block text-xs text-white/35">
+                              Event date: {source.eventDate ? formatDate(source.eventDate) : "not established"} · Retrieved: {source.lastRetrievedAt ? formatDate(source.lastRetrievedAt) : "not fetched"}
+                            </span>
+                          </a>
+                        ))}
+                        {latestDiscussion.session.verification.claims.every(claim => claim.supportingSources.length === 0 && claim.contradictingSources.length === 0) && (
+                          <p className="text-sm text-white/45">No sources were available for verification.</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-amber-400/15 bg-amber-400/[0.035] p-5">
+                      <h3 className="font-semibold text-amber-100">What we don’t know</h3>
+                      {latestDiscussion.session.verification.unknowns.length > 0 ? (
+                        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-white/65">
+                          {latestDiscussion.session.verification.unknowns.map((unknown) => <li key={unknown}>{unknown}</li>)}
+                        </ul>
+                      ) : (
+                        <p className="mt-3 text-sm text-white/50">No unresolved claims were identified by the configured checks.</p>
+                      )}
+                    </div>
+                  </div>
+                </section>
+              )}
+
               <div className="space-y-4">
                 {latestDiscussion.session.rounds.map((round: DiscussionRound) => (
                   <div key={round.round} className="bg-solana-navy/50 border border-white/10 rounded-xl overflow-hidden">
                     <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                      <h3 className="font-semibold text-white">Round {round.round}</h3>
+                      <h3 className="font-semibold text-white">
+                        {round.round === 1 ? "Independent Analyst Perspectives" : `Discussion Round ${round.round}`}
+                      </h3>
                       <span className="text-white/50 text-sm">{round.messages.length} experts</span>
                     </div>
                     <div className="p-4 space-y-3">
@@ -284,11 +447,6 @@ export function AINewsDashboard() {
                             <div className="flex items-center gap-2 mb-1">
                               <span className="font-medium text-white">{msg.personaName}</span>
                               <span className="text-xs text-white/50 px-2 py-0.5 rounded bg-white/10">{msg.role}</span>
-                              {msg.provider && (
-                                <span className="font-mono text-[9px] uppercase tracking-wider text-[#9cb7ff]/70">
-                                  {msg.provider}
-                                </span>
-                              )}
                             </div>
                             <div className="text-white/90 text-sm leading-relaxed">{msg.content}</div>
                           </div>
@@ -438,7 +596,7 @@ export function AINewsDashboard() {
       )}
 
       <div className="border-t border-white/10 pt-8 text-center text-white/50 text-sm">
-        <p>Multi-provider AI panel · Requires at least one server-side AI provider key</p>
+        <p>Independent AI perspectives · Analysis is automated and evidence may be incomplete</p>
         <p className="mt-1">Automated analysis — not financial advice. Verify independently.</p>
       </div>
     </div>

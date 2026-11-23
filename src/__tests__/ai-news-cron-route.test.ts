@@ -25,15 +25,18 @@ delete process.env.AI_NEWS_CRON_SECRET;
 delete process.env.TELEGRAM_CRON_SECRET;
 process.env.AI_NEWS_QUICK_MODE = "false";
 
-const { GET } = require("@/app/api/ai-news/discuss/route") as typeof import("@/app/api/ai-news/discuss/route");
+const { GET, POST } = require("@/app/api/ai-news/discuss/route") as typeof import("@/app/api/ai-news/discuss/route");
 const cronSecret = "test-ai-news-vercel-cron-secret";
 
-function request(authorization?: string, action: string | null = "test"): NextRequest {
+function request(authorization?: string, action: string | null = "test", sameOrigin = false): NextRequest {
   const url = action
     ? `https://threatx.test/api/ai-news/discuss?action=${action}`
     : "https://threatx.test/api/ai-news/discuss";
   return new NextRequest(url, {
-    headers: authorization ? { authorization } : {},
+    headers: {
+      ...(authorization ? { authorization } : {}),
+      ...(sameOrigin ? { origin: "https://threatx.test" } : {}),
+    },
   });
 }
 
@@ -95,5 +98,16 @@ describe("GET /api/ai-news/discuss", () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ processed: 1, sessionId: "discussion-1" });
     expect(orchestrator.runDiscussionSession).toHaveBeenCalledWith(newsItems);
+  });
+
+  it("allows a same-origin dashboard run and rate-limits repeated manual runs", async () => {
+    const news = jest.requireMock("@/lib/ai-news/news-aggregator");
+    news.getTopNews.mockResolvedValue([]);
+
+    const firstResponse = await POST(request(undefined, null, true));
+    const secondResponse = await POST(request(undefined, null, true));
+
+    expect(firstResponse.status).toBe(200);
+    expect(secondResponse.status).toBe(429);
   });
 });
