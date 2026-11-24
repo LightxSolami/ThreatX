@@ -19,7 +19,7 @@ export default function WhitepaperPage() {
           <span>•</span>
           <span>October 2024</span>
           <span>•</span>
-          <Link href="https://github.com/LightxSolami/Solcurity" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+          <Link href="https://github.com/LightxSolami/ThreatX" target="_blank" rel="noopener noreferrer" className="hover:text-white">
             GitHub
           </Link>
         </div>
@@ -295,7 +295,7 @@ export default function WhitepaperPage() {
             <li><strong>No Private Keys:</strong> Never collected, stored, or transmitted</li>
             <li><strong>Public Data Only:</strong> All analysis uses publicly available on-chain data</li>
             <li><strong>No Tracking:</strong> No analytics, cookies, or user fingerprinting</li>
-            <li><strong>Open Source:</strong> Full codebase auditable at <a href="https://github.com/LightxSolami/Solcurity" className="text-solana-blue hover:underline" target="_blank" rel="noopener noreferrer">github.com/LightxSolami/Solcurity</a></li>
+            <li><strong>Open Source:</strong> Full codebase auditable at <a href="https://github.com/LightxSolami/ThreatX" className="text-solana-blue hover:underline" target="_blank" rel="noopener noreferrer">github.com/LightxSolami/ThreatX</a></li>
             <li><strong>Rate Limited:</strong> Per-IP limits prevent abuse</li>
             <li><strong>Cached Results:</strong> Complete scan results may be cached; incomplete scans are not cached as successful results</li>
           </ul>
@@ -331,7 +331,7 @@ export default function WhitepaperPage() {
       <footer className="mt-16 pt-8 border-t border-white/10 text-center text-white/50">
         <p className="mb-2">THREATX is open source under MIT License</p>
         <p className="text-sm">
-          <Link href="https://github.com/LightxSolami/Solcurity" target="_blank" rel="noopener noreferrer" className="text-solana-blue hover:underline">
+          <Link href="https://github.com/LightxSolami/ThreatX" target="_blank" rel="noopener noreferrer" className="text-solana-blue hover:underline">
             View on GitHub
           </Link>
         </p>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Github } from "lucide-react";
 import "./globals.css";
 import { NavBar } from "@/components/NavBar";
 
@@ -108,6 +109,15 @@ export default function RootLayout({
                   THREATX AI-powered Solana security. Don&apos;t trust. Verify.
                 </p>
                 <div className="mt-6 flex items-center gap-4">
+                  <a
+                    href="https://github.com/LightxSolami/ThreatX"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="View THREATX on GitHub"
+                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:border-white/20"
+                  >
+                    <Github aria-hidden="true" className="h-5 w-5 text-white/80" />
+                  </a>
                   <a
                     href="https://x.com/THREATXofficial"
                     target="_blank"
