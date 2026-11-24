@@ -6,6 +6,8 @@ import { WalletTracker } from "@/components/WalletTracker";
 import { TelegramBotCard } from "@/components/telegram/TelegramBotCard";
 import { getPumpFunTokenLink } from "@/lib/pumpfun-token-link";
 
+const OFFICIAL_PUMPFUN_TOKEN_URL = "https://pump.fun/coin/H7WEmyFpcp73JcR3NtZoNMW2CpB2uV5jkfohNFVLpump";
+
 export const metadata: Metadata = {
   title: "THREATX | AI-Powered Solana Security",
   description:
@@ -13,7 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  const pumpFunTokenLink = getPumpFunTokenLink(process.env.NEXT_PUBLIC_PUMPFUN_TOKEN_URL);
+  const pumpFunTokenLink = getPumpFunTokenLink(
+    process.env.NEXT_PUBLIC_PUMPFUN_TOKEN_URL || OFFICIAL_PUMPFUN_TOKEN_URL
+  );
 
   return (
     <div className="min-h-screen bg-solana-dark text-white">

@@ -105,7 +105,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `TELEGRAM_WEBHOOK_ADMIN_TOKEN` | Yes, for webhook administration | — | Bearer token required for webhook `set`, `delete`, `info`, and `me` actions |
 | `TELEGRAM_CRON_SECRET` | Yes, for Telegram alerts | — | Shared bearer secret for the scheduled alert dispatcher |
 | `CRON_SECRET` | Yes, for Vercel Cron | — | Bearer secret automatically sent by Vercel Cron; AI News and Telegram dispatch also accept it |
-| `NEXT_PUBLIC_PUMPFUN_TOKEN_URL` | No | — | Official Pump.fun coin URL (`https://pump.fun/coin/<mint>`) shown in the dashboard launch card |
+| `NEXT_PUBLIC_PUMPFUN_TOKEN_URL` | No | `https://pump.fun/coin/H7WEmyFpcp73JcR3NtZoNMW2CpB2uV5jkfohNFVLpump` | Pump.fun coin URL shown in the dashboard launch card; defaults to the official THREATX token |
 | `GROQ_API_KEY` | No | — | Server-only Groq API key for optional Qwen explanations and AI News debates; never expose as `NEXT_PUBLIC_*` |
 | `GEMINI_API_KEY` | No | — | Server-only Gemini API key; at least one AI News provider key is needed to generate debates |
 | `HUGGINGFACE_API_KEY` | No | — | Optional server-only AI News provider key |
