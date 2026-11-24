@@ -92,10 +92,10 @@ export default function AboutPage() {
               THREATX is open source. The code is available on GitHub:
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="https://github.com/solcurity/solcurity" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-solana-purple/20 border border-solana-purple/30 text-solana-blue rounded-xl hover:bg-solana-purple/30 transition-colors text-sm font-medium">
+              <a href="https://github.com/LightxSolami/ThreatX" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-solana-purple/20 border border-solana-purple/30 text-solana-blue rounded-xl hover:bg-solana-purple/30 transition-colors text-sm font-medium">
                 View on GitHub
               </a>
-              <a href="https://github.com/solcurity/solcurity/issues" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/5 border border-white/10 text-white/70 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">
+              <a href="https://github.com/LightxSolami/ThreatX/issues" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/5 border border-white/10 text-white/70 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">
                 Report Issue
               </a>
             </div>
